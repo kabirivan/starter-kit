@@ -1,55 +1,37 @@
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {
-  ViroARScene,
-  ViroText,
-  ViroConstants,
-  ViroARSceneNavigator,
-} from '@viro-community/react-viro';
+import * as React from 'react';
+import {Button, View, Text} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import BluetoothScreen from './src/pages/BluetoothScreen';
+import ArScreen from './src/pages/ArScreen';
+import ConnectScreen from './src/pages/ConnectScreen';
 
-const HelloWorldSceneAR = () => {
-  const [text, setText] = useState('Initializing AR...');
-
-  function onInitialized(state, reason) {
-    console.log('guncelleme', state, reason);
-    if (state === ViroConstants.TRACKING_NORMAL) {
-      setText('Hello World!');
-    } else if (state === ViroConstants.TRACKING_NONE) {
-      // Handle loss of tracking
-    }
-  }
-
+function HomeScreen({navigation}) {
   return (
-    <ViroARScene onTrackingUpdated={onInitialized}>
-      <ViroText
-        text={text}
-        scale={[0.5, 0.5, 0.5]}
-        position={[0, 0, -1]}
-        style={styles.helloWorldTextStyle}
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Presiona para iniciar...</Text>
+      <Button
+        title="Establecer Conexión"
+        color='#841584'
+        onPress={() => navigation.navigate('Connection')}
       />
-    </ViroARScene>
+    </View>
   );
-};
+}
 
-export default () => {
+const Stack = createNativeStackNavigator();
+
+function App() {
   return (
-    <ViroARSceneNavigator
-      autofocus={true}
-      initialScene={{
-        scene: HelloWorldSceneAR,
-      }}
-      style={styles.f1}
-    />
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Bluetooth" component={BluetoothScreen} />
+        <Stack.Screen name="Realidad Aumentada" component={ArScreen} />
+        <Stack.Screen name="Connection" component={ConnectScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-};
+}
 
-var styles = StyleSheet.create({
-  f1: {flex: 1},
-  helloWorldTextStyle: {
-    fontFamily: 'Arial',
-    fontSize: 30,
-    color: '#ffffff',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-});
+export default App;
